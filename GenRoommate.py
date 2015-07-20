@@ -11,7 +11,7 @@ def rate(lista,listb):
         return 0
 
 #Interpret file into dictionaries (Name/Gender, Name/Vector, Name/Hall)
-fileHandle=open("girls.csv", "r")
+fileHandle=open("data.csv", "r") # <-- Sort among various categories (hall, gender) before inputting data and call each CSV table as it's own file.
 personList = fileHandle.readlines()
 genDict = {}
 vecDict = {}
@@ -38,20 +38,31 @@ for person in vecDict.keys():
     for roommate in roommateList:
         rating = rate(vecDict[person],vecDict[roommate])
         dictionary[roommate]=rating
+        
     #The max function only returns one max, so there's a safeguard in case of multiple.
     bestRoommate = max(dictionary, key=dictionary.get)
+    
+    #Code for "Best" roommates.
     bestList = [bestRoommate]
     rating = dictionary[bestRoommate]
+    #If rating matches best rating, add to "best" list.
     for x in roommateList:
         if dictionary[x]==rating and x != bestRoommate:
             bestList.append(x)
+            
+    #Code for "Worst" roommates.
     worstRoommate = min(dictionary, key=dictionary.get)
     worstList = [worstRoommate]
     rating = dictionary[worstRoommate]
     for x in roommateList:
         if dictionary[x]==rating and x != worstRoommate:
             worstList.append(x)
+            
+    #Begin outputting data.
     print (person+":")
+
+    #Output best roommate(s).
+    #If the list of best is one long, use easier formatting for speed.
     if len(bestList)==1:
         print ("   Best: "+bestRoommate+" (Score:"+str(dictionary[bestRoommate])+")")
     else:
@@ -59,6 +70,8 @@ for person in vecDict.keys():
         for x in bestList:
             string = string + ", "+x
         print ("   Best: "+string[2:]+" (Score:"+str(dictionary[bestRoommate])+")")
+
+    #Output worst roommate(s)
     if len(worstList)==1:
         print ("   Worst: "+worstRoommate+" (Score:"+str(dictionary[worstRoommate])+")")
     else:
@@ -68,7 +81,5 @@ for person in vecDict.keys():
         print ("   Worst: "+string[2:]+" (Score:"+str(dictionary[worstRoommate])+")")
 
 
-
-
-
+#Close the file, clean up data.
 fileHandle.close()
